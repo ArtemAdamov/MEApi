@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Manufacturer;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class FilesController extends Controller
@@ -20,9 +22,23 @@ class FilesController extends Controller
         $validated = $request->validate([
             'filename' => 'required',
             'path' => 'required',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'manufacturer_id' => 'nullable|exists:manufacturers,id',
         ]);
 
         $file = File::create($validated);
+
+        if ($request->has('supplier_id')) {
+            $supplier = Supplier::find($request->supplier_id);
+            $file->supplier()->associate($supplier);
+            $file->save();
+        }
+
+        if ($request->has('manufacturer_id')) {
+            $manufacturer = Manufacturer::find($request->manufacturer_id);
+            $file->manufacturer()->associate($manufacturer);
+            $file->save();
+        }
 
         return response()->json(['data' => $file], 201);
     }

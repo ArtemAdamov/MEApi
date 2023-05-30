@@ -7,6 +7,25 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+В задании не указано нужен ли отдельный endpoint для получения связи производителя и поставщика, поэтому чтобы увидеть что производитель и поставщик свзяаны нужно отправить запрос api/suppliers/[id] или api/manufacturers/[id]
+
+# Установка
+
+Этот проект был разработан с использованием Docker и Sail.
+
+## Порядок действий
+
+1. **Клонирование репозитория.** Скопируйте репозиторий на локальную машину с помощью команды `git clone`.
+2. **Запуск Docker.** Запустите Docker на локальной машине.
+3. **Запуск Sail.** Используйте команду `vendor/bin/sail up -d` для запуска проекта.
+4. **Выполнение миграций.** Примените миграции базы данных с помощью команды `vendor/bin/sail migrate`.
+5. **Наполнение тестовыми данными.** Используйте следующие команды для наполнения базы данных тестовыми данными:
+    - `vendor/bin/sail artisan db:seed --class=SupplierSeeder`
+    - `vendor/bin/sail artisan db:seed --class=ManufacturerSeeder`
+    - `vendor/bin/sail artisan db:seed --class=FileSeeder`
+6. **Тестирование с помощью Postman.** Используйте MeTestApi.postman_collection.json коллекцию для Postman для проверки API.
+7. **Остановка Sail.**  используйте команду `vendor/bin/sail down` для остановки Sail и освобождения ресурсов.
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
