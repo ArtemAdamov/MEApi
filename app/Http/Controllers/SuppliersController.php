@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manufacturer;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SuppliersController extends Controller
 {
     public function index(Request $request)
     {
-        $suppliers = Supplier::orderBy($request->sortby ?: 'name', $request->sortdesc ?: 'asc')
+        $suppliers = Supplier::with('manufacturers')->orderBy($request->sortby ?: 'name', $request->sortdesc ?: 'asc')
             ->paginate($request->per_page ?: 10);
 
         return response()->json(['data' => $suppliers]);
@@ -31,6 +33,14 @@ class SuppliersController extends Controller
 
     public function show(Supplier $supplier)
     {
+        $supplier->load('files');
+
+        // TODO: extract to a new route, ENDPOINT and controller
+        $manufacturers = DB::table('supplier_manufacturer')
+            ->where('supplier_id', $supplier->id)
+            ->pluck('manufacturer_id');
+        $supplier->manufacturers = Manufacturer::find($manufacturers);
+
         return response()->json(['data' => $supplier]);
     }
 
